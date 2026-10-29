@@ -20,3 +20,19 @@ Os registros de teste ficaram apenas no armazenamento local do navegador; nenhum
 ## Limites
 
 Não foi gerado APK nem executado teste nativo em Android ou iOS. Foram preservadas as limitações funcionais do protótipo recebido: movimentações sem vínculo com placa, saída substituindo o horário da entrada e duas vagas de demonstração ocupadas sem movimentação inicial. Os testes antigos em VERIFICACAO.md continuam se referindo ao Portal Acadêmico do professor.
+
+
+# Verificação da versão 1.3.0 — 29/10/2026
+
+- Cadastro integrado à vaga A01 pelo mapa da tela inicial, preservando a seleção.
+- Placa 1234567 rejeitada; abc1d23 normalizada e cadastrada como ABC1D23.
+- Campo de placa com maxlength=7; texto longo limitado a ABC1234.
+- Seleção de veículo existente e entrada confirmada.
+- Veículo em uso indisponível para uma segunda vaga.
+- Consulta de placa, modelo e horário pelo menu Vagas após recarregar.
+- Saída pelo painel da vaga, liberação e reutilização do veículo em nova entrada.
+- Histórico preservando os dois horários, placa e modelo.
+- Painel de detalhes inspecionado em 1280 × 720 e 390 × 844.
+- `node tests.cjs`: testes aprovados para formatos de placa, duplicidade de cadastro, dupla ocupação, preservação de horários, proteção contra saída obsoleta e migração idempotente de banco antigo sem apagar dados.
+
+Os testes de migração usam o código real de database.js com SQLite em memória. A interface foi validada com expo-sqlite web real. Android/iOS continuam sem validação nativa nesta etapa. Esta versão substitui as limitações de vínculo e horários descritas no registro da versão 1.2.0 acima.

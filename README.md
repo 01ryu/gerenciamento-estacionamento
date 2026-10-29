@@ -1,6 +1,14 @@
 # Órbita — Gerenciamento de Estacionamento
 
-Protótipo acadêmico em React Native com Expo SDK 53 e banco de dados SQLite local. Versão 1.2.0 com identidade visual azul galáctica, logo original de carro e cancela e layout adaptado para celular e computador.
+Protótipo acadêmico em React Native com Expo SDK 53 e banco de dados SQLite local. Versão 1.3.0 com identidade visual azul galáctica, logo original de carro e cancela e layout adaptado para celular e computador.
+
+## Integração de vagas e veículos
+- Clique em qualquer vaga no mapa inicial ou na tela Vagas para abrir seus detalhes.
+- Vaga livre: selecione um veículo cadastrado ou use Novo veículo para cadastrar e selecionar sem perder a vaga.
+- Vaga ocupada: veja placa, modelo e entrada e use Registrar saída desta vaga.
+- Um veículo não pode ocupar duas vagas simultaneamente.
+- A placa tem no máximo 7 caracteres; letras são convertidas para maiúsculas e caracteres especiais são removidos. O cadastro exige ABC1234 ou ABC1D23, tanto na interface como na camada de dados.
+- O histórico mantém o veículo e os horários de entrada e saída separados.
 
 ## Interface
 - Painel com vagas livres, ocupadas, veículos cadastrados e últimas movimentações.
@@ -23,7 +31,10 @@ Para testar no navegador, execute `npm run web`. O projeto inclui a configuraç�
 Também é possível instalar com `pnpm install --frozen-lockfile`; o arquivo `pnpm-lock.yaml` registra as versões utilizadas. Não misture os gerenciadores na mesma instalação.
 
 ## Arquivos principais
-- `App.js`: estado, navegação e operações no SQLite.
+- `App.js`: estado e navegação.
+- `database.js`: operações e migração do SQLite.
+- `SpotDetails.js`: entrada/saída e cadastro integrado ao mapa.
+- `vehicleRules.js`: normalização e validação de placas.
 - `Interface.js`: telas, componentes e tema.
 - `Brand.js`: logo, ilustração e ícones vetoriais.
 - `index.js`: inicialização do aplicativo.
@@ -33,9 +44,9 @@ Também é possível instalar com `pnpm install --frozen-lockfile`; o arquivo `p
 O app utiliza SQLite local por meio do pacote `expo-sqlite`. Na primeira execução, cria automaticamente `gerenciamento_estacionamento.db` e estas tabelas:
 - `vagas`: código da vaga e estado Livre/Ocupada.
 - `veiculos`: placa, modelo e data de cadastro.
-- `movimentacoes`: vaga, evento, horário e estado de encerramento.
+- `movimentacoes`: vaga, placa, evento, horários de entrada/saída e estado de encerramento.
 
-As vagas iniciais e um veículo de demonstração são inseridos apenas quando as tabelas correspondentes estão vazias. Cadastros, atualizações de vagas e movimentações são gravados no dispositivo e permanecem após fechar/reabrir o app. O banco é local: não sincroniza com servidor e não compartilha dados entre aparelhos.
+Em uma instalação nova, as seis vagas começam livres e não há veículos fictícios. A atualização adiciona as novas colunas sem apagar cadastros ou movimentações existentes. Cadastros, atualizações de vagas e movimentações são gravados no dispositivo e permanecem após fechar/reabrir o app. O banco é local: não sincroniza com servidor e não compartilha dados entre aparelhos.
 
 ## Funcionalidades
 - Consultar vagas livres e ocupadas.
@@ -47,7 +58,10 @@ As vagas iniciais e um veículo de demonstração são inseridos apenas quando a
 ## Limitações
 O valor de R$ 10,00 é demonstrativo, sem cobrança real. O protótipo ainda não possui login, servidor remoto, sincronização ou sensores físicos.
 
-Nesta versão, o cadastro de veículos é separado das movimentações: a entrada é vinculada à vaga, sem associar a placa. O registro de saída substitui o evento e o horário da entrada; não calcula a duração da permanência. As vagas A02 e B01 começam ocupadas como demonstração, sem movimentação inicial para registrar sua saída.
+Ocupações antigas sem placa são exibidas como “Veículo não informado” e podem ser encerradas pelo mapa. Datas que não existiam nos registros anteriores não são inventadas. Não há cálculo automático de tarifa nem sincronização entre dispositivos. No navegador, use uma única aba do aplicativo por endereço para evitar bloqueio do arquivo SQLite.
+
+## Testes
+Execute `node tests.cjs` com Node.js 22.13 ou superior para verificar validação, vínculos, transações e migração em um SQLite isolado em memória. A verificação manual de interface está em [TESTES_UI.md](TESTES_UI.md).
 
 ## Documentação da primeira entrega
 - [Proposta inicial](PROPOSTA.md).
