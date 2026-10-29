@@ -1,0 +1,9 @@
+{
+  "expo": {
+    "name": "Órbita | Estacionamento",
+    "slug": "gerenciamento-estacionamento",
+    "version": "1.2.0",
+    "userInterfaceStyle": "dark",
+    "web": { "bundler": "metro" }
+  }
+}
