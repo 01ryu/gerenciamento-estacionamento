@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Interface from './Interface';
-import {initialize,readData,saveVehicle,enterSpot,leaveSpot} from './database';
+import {initialize,readData,saveVehicle,enterSpot,leaveSpot,extendStay} from './database';
 import {normalizePlate} from './vehicleRules';
 export default function App() {
  const [notice,setNotice]=useState(null),[busy,setBusy]=useState(false);
@@ -29,13 +29,14 @@ export default function App() {
   await saveVehicle(normalized,model.trim());await refresh();setSelectedVehicle(normalized);setPlate('');setModel('');
   setNotice({title:'Veículo cadastrado',message:selectedSpot?'Veículo selecionado. Confirme a entrada na vaga.':'Cadastro salvo com sucesso.'});
  });
- const checkIn=()=>perform(async()=>{
-  await enterSpot(selectedSpot,selectedVehicle);await refresh();
+ const checkIn=plan=>perform(async()=>{
+  await enterSpot(selectedSpot,selectedVehicle,plan);await refresh();
   setNotice({title:'Entrada registrada',message:`${selectedVehicle} está na vaga ${selectedSpot}.`});setSelectedVehicle('');
  });
+ const extendStayAction=(id,plan)=>perform(async()=>{await extendStay(id,plan);await refresh();setNotice({title:'Estadia prorrogada',message:'Tempo adicional e valor recebido registrados. O novo prazo já está disponível nos detalhes.'});});
  const checkOut=item=>perform(async()=>{
   await leaveSpot(item.spot,item.id||null);await refresh();
   setNotice({title:'Saída registrada',message:`A vaga ${item.spot} foi liberada. O veículo e os horários foram preservados no histórico.`});
  });
- return <Interface {...{screen,setScreen,goBack,canGoBack,spots,vehicles,history,selectedSpot,setSelectedSpot,selectedVehicle,setSelectedVehicle,plate,setPlate,model,setModel,dbReady,dbError,notice,setNotice,busy,addVehicle,checkIn,checkOut}}/>;
+ return <Interface {...{screen,setScreen,goBack,canGoBack,spots,vehicles,history,selectedSpot,setSelectedSpot,selectedVehicle,setSelectedVehicle,plate,setPlate,model,setModel,dbReady,dbError,notice,setNotice,busy,addVehicle,checkIn,checkOut,extendStayAction}}/>;
 }

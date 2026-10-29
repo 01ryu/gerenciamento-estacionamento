@@ -36,3 +36,13 @@ Não foi gerado APK nem executado teste nativo em Android ou iOS. Foram preserva
 - `node tests.cjs`: testes aprovados para formatos de placa, duplicidade de cadastro, dupla ocupação, preservação de horários, proteção contra saída obsoleta e migração idempotente de banco antigo sem apagar dados.
 
 Os testes de migração usam o código real de database.js com SQLite em memória. A interface foi validada com expo-sqlite web real. Android/iOS continuam sem validação nativa nesta etapa. Esta versão substitui as limitações de vínculo e horários descritas no registro da versão 1.2.0 acima.
+
+
+# Verificação da versão 1.4.0 — 29/10/2026
+
+- Entrada de teste na A03 com 60 minutos/R$ 20 e observações.
+- Prorrogação pelo detalhe da vaga em mais 300 minutos/R$ 50: total 360 minutos/R$ 70 e prazo acrescido de 5 horas.
+- Recarregamento e consulta pelo menu Vagas preservaram contrato, observações e prorrogação.
+- Saída do veículo de teste liberou A03. A ocupação preexistente A02 foi preservada.
+- Testes automatizados com SQLite em memória: planos inválidos, prorrogações sucessivas, bloqueio após saída, cálculo por período e renovação após vencimento, além das verificações anteriores.
+- A validação desta versão foi feita no navegador; Android/iOS não foram executados.

@@ -1,6 +1,6 @@
 # Órbita — Gerenciamento de Estacionamento
 
-Protótipo acadêmico em React Native com Expo SDK 53 e banco de dados SQLite local. Versão 1.3.0 com identidade visual azul galáctica, logo original de carro e cancela e layout adaptado para celular e computador.
+Protótipo acadêmico em React Native com Expo SDK 53 e banco de dados SQLite local. Versão 1.4.0 com identidade visual azul galáctica, logo original de carro e cancela e layout adaptado para celular e computador.
 
 ## Integração de vagas e veículos
 - Clique em qualquer vaga no mapa inicial ou na tela Vagas para abrir seus detalhes.
@@ -9,6 +9,14 @@ Protótipo acadêmico em React Native com Expo SDK 53 e banco de dados SQLite lo
 - Um veículo não pode ocupar duas vagas simultaneamente.
 - A placa tem no máximo 7 caracteres; letras são convertidas para maiúsculas e caracteres especiais são removidos. O cadastro exige ABC1234 ou ABC1D23, tanto na interface como na camada de dados.
 - O histórico mantém o veículo e os horários de entrada e saída separados.
+
+## Tempo, valores e prorrogação
+- Na entrada, escolha 1 hora por R$ 20, 5 horas por R$ 50 ou personalize minutos e valor. Registre até 500 caracteres de observações.
+- Nos detalhes de uma vaga ocupada, use **Prorrogar estadia**, selecione o tempo adicional e o valor recebido e confirme.
+- O período adicional começa no vencimento atual; se já venceu, começa no momento da prorrogação.
+- Totais, novo prazo e cada prorrogação ficam salvos no SQLite e no histórico, preservando a entrada original.
+- O saldo proporcional representa o tempo não utilizado de cada período; não indica dívida nem reembolso. Ao registrar saída, o saldo fica fixado naquele instante.
+- Registros antigos sem contrato precisam ser encerrados e receber nova entrada para permitir prorrogação.
 
 ## Interface
 - Painel com vagas livres, ocupadas, veículos cadastrados e últimas movimentações.
@@ -34,6 +42,8 @@ Também é possível instalar com `pnpm install --frozen-lockfile`; o arquivo `p
 - `App.js`: estado e navegação.
 - `database.js`: operações e migração do SQLite.
 - `SpotDetails.js`: entrada/saída e cadastro integrado ao mapa.
+- `ExtensionForm.js`: formulário de prorrogação.
+- `parkingPlan.js` e `PlanSummary.js`: validação, cálculo e apresentação de períodos.
 - `vehicleRules.js`: normalização e validação de placas.
 - `Interface.js`: telas, componentes e tema.
 - `Brand.js`: logo, ilustração e ícones vetoriais.
@@ -44,7 +54,8 @@ Também é possível instalar com `pnpm install --frozen-lockfile`; o arquivo `p
 O app utiliza SQLite local por meio do pacote `expo-sqlite`. Na primeira execução, cria automaticamente `gerenciamento_estacionamento.db` e estas tabelas:
 - `vagas`: código da vaga e estado Livre/Ocupada.
 - `veiculos`: placa, modelo e data de cadastro.
-- `movimentacoes`: vaga, placa, evento, horários de entrada/saída e estado de encerramento.
+- `movimentacoes`: vaga, placa, evento, horários, contrato inicial, observações e encerramento.
+- `prorrogacoes`: períodos adicionais, valores recebidos e seus horários vinculados à movimentação.
 
 Em uma instalação nova, as seis vagas começam livres e não há veículos fictícios. A atualização adiciona as novas colunas sem apagar cadastros ou movimentações existentes. Cadastros, atualizações de vagas e movimentações são gravados no dispositivo e permanecem após fechar/reabrir o app. O banco é local: não sincroniza com servidor e não compartilha dados entre aparelhos.
 
@@ -56,9 +67,9 @@ Em uma instalação nova, as seis vagas começam livres e não há veículos fic
 - Consultar movimentações salvas.
 
 ## Limitações
-O valor de R$ 10,00 é demonstrativo, sem cobrança real. O protótipo ainda não possui login, servidor remoto, sincronização ou sensores físicos.
+Os valores são registros locais; não há processamento de pagamentos. O protótipo ainda não possui login, servidor remoto, sincronização ou sensores físicos.
 
-Ocupações antigas sem placa são exibidas como “Veículo não informado” e podem ser encerradas pelo mapa. Datas que não existiam nos registros anteriores não são inventadas. Não há cálculo automático de tarifa nem sincronização entre dispositivos. No navegador, use uma única aba do aplicativo por endereço para evitar bloqueio do arquivo SQLite.
+Ocupações antigas sem placa são exibidas como “Veículo não informado” e podem ser encerradas pelo mapa. Datas que não existiam nos registros anteriores não são inventadas. Não há cobrança automática de tempo excedido nem sincronização entre dispositivos. No navegador, use uma única aba do aplicativo por endereço para evitar bloqueio do arquivo SQLite.
 
 ## Testes
 Execute `node tests.cjs` com Node.js 22.13 ou superior para verificar validação, vínculos, transações e migração em um SQLite isolado em memória. A verificação manual de interface está em [TESTES_UI.md](TESTES_UI.md).

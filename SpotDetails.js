@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import {Modal,View,Text,Pressable,ScrollView,TextInput,StyleSheet,KeyboardAvoidingView,Platform} from 'react-native';
 import {Icon} from './Brand';
 import {isValidPlate} from './vehicleRules';
+import {PLANS,parsePrice} from './parkingPlan';
+import PlanSummary from './PlanSummary';
+import ExtensionForm from './ExtensionForm';
 
 const date=value=>value?(value.includes('T')?new Date(value).toLocaleString('pt-BR'):value):'Não informado';
 function Action({title,onPress,disabled=false,secondary=false}) {
@@ -9,6 +12,10 @@ function Action({title,onPress,disabled=false,secondary=false}) {
 }
 export default function SpotDetails({p,onClose}) {
  const [mode,setMode]=useState('existing');
+ const [planId,setPlanId]=useState('hour'),[price,setPrice]=useState(''),[minutes,setMinutes]=useState(''),[notes,setNotes]=useState('');
+ const chosen=PLANS.find(plan=>plan.id===planId);
+ const plan={priceCents:chosen?chosen.priceCents:parsePrice(price),minutes:chosen?chosen.minutes:(/^\d+$/.test(minutes)?Number(minutes):0),notes};
+ const validPlan=Number.isInteger(plan.priceCents)&&plan.priceCents>0&&plan.priceCents<=999999999&&Number.isInteger(plan.minutes)&&plan.minutes>0&&plan.minutes<=525600;
  const {selectedSpot,spots,history,vehicles,selectedVehicle,setSelectedVehicle,plate,setPlate,model,setModel,busy,notice,addVehicle,checkIn,checkOut}=p;
  const spot=spots.find(s=>s.id===selectedSpot);
  const active=history.find(h=>h.spot===selectedSpot&&!h.closed);
@@ -24,6 +31,8 @@ export default function SpotDetails({p,onClose}) {
  <View style={s.vehicle}><Icon name="car" size={36} color="#75D9F5"/><View style={{flex:1}}><Text style={s.plate}>{active?.plate||'Veículo não informado'}</Text><Text style={s.text}>{active?.model||'Ocupação registrada antes do vínculo com veículos.'}</Text></View></View>
  <Text style={s.label}>Entrada</Text><Text style={s.text}>{date(active?.enteredAt||active?.time)}</Text>
  {!active?.plate&&<Text style={s.help}>O registro antigo não contém a placa. A saída poderá ser registrada sem alterar os dados anteriores.</Text>}
+ <PlanSummary entry={active}/>
+ <ExtensionForm entry={active} busy={busy} onExtend={p.extendStayAction}/>
  <Action title={busy?'Registrando saída…':'Registrar saída desta vaga'} disabled={busy} onPress={()=>checkOut(active||{spot:selectedSpot})}/>
  </>:<>
  <Text style={s.text}>Escolha um veículo cadastrado ou adicione um novo sem sair desta vaga.</Text>
@@ -34,7 +43,11 @@ export default function SpotDetails({p,onClose}) {
   return <Pressable key={v.plate} accessibilityRole="radio" accessibilityLabel={`Selecionar ${v.plate}`} accessibilityState={{checked:selectedVehicle===v.plate,disabled:!!occupation}} disabled={!!occupation||busy} onPress={()=>setSelectedVehicle(v.plate)} style={[s.option,selectedVehicle===v.plate&&s.optionSelected,occupation&&{opacity:0.5}]}><Icon name="car" color="#75D9F5"/><View style={{flex:1}}><Text style={s.label}>{v.plate}</Text><Text style={s.text}>{v.model}{occupation?` · Ocupa ${occupation.spot}`:''}</Text></View>{selectedVehicle===v.plate&&<Icon name="check" color="#64E2BA"/>}</Pressable>;
  }):<Text style={s.help}>Nenhum veículo cadastrado. Use a opção Novo veículo.</Text>}</View>}
  {selected&&!selectedBusy&&<View style={s.notice}><Text style={s.label}>Selecionado: {selected.plate}</Text><Text style={s.text}>{selected.model}</Text></View>}
- <Action title={busy?'Registrando…':'Confirmar entrada na vaga'} disabled={busy||!selected||selectedBusy} onPress={checkIn}/>
+ <Text style={[s.label,{marginTop:22}]}>Tempo e valor contratado</Text>
+ <View style={{gap:8}}>{[...PLANS,{id:'custom',label:'Personalizado'}].map(option=><Pressable key={option.id} accessibilityRole="radio" accessibilityLabel={option.label} accessibilityState={{checked:planId===option.id}} onPress={()=>setPlanId(option.id)} style={[s.option,planId===option.id&&s.optionSelected]}><Text style={[s.label,{flex:1}]}>{option.label}</Text>{planId===option.id&&<Icon name="check" color="#64E2BA"/>}</Pressable>)}</View>
+ {planId==='custom'&&<View style={{marginTop:16}}><Text style={s.label}>Valor total (R$)</Text><TextInput accessibilityLabel="Valor do período" value={price} onChangeText={setPrice} keyboardType="decimal-pad" maxLength={10} placeholder="Ex.: 20,00" placeholderTextColor="#7D91AF" style={s.input}/><Text style={s.label}>Tempo (minutos)</Text><TextInput accessibilityLabel="Tempo contratado em minutos" value={minutes} onChangeText={setMinutes} keyboardType="number-pad" maxLength={6} placeholder="Ex.: 60" placeholderTextColor="#7D91AF" style={s.input}/>{!validPlan&&<Text style={s.error}>Informe um valor positivo com até 2 casas decimais e um tempo inteiro de 1 a 525600 minutos.</Text>}</View>}
+ <Text style={[s.label,{marginTop:20}]}>Observações do cliente (opcional)</Text><TextInput accessibilityLabel="Observações do cliente" value={notes} onChangeText={setNotes} maxLength={500} multiline textAlignVertical="top" placeholder="Ex.: cliente retorna às 18h." placeholderTextColor="#7D91AF" style={[s.input,{minHeight:90}]}/><Text style={s.help}>{notes.length}/500 caracteres. O tempo começa ao confirmar a entrada.</Text>
+ <Action title={busy?'Registrando…':'Confirmar entrada na vaga'} disabled={busy||!selected||selectedBusy||!validPlan} onPress={()=>checkIn(plan)}/>
  </>}
  </ScrollView></View></KeyboardAvoidingView></Modal>;
 }
