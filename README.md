@@ -1,6 +1,6 @@
 # Órbita — Gerenciamento de Estacionamento
 
-Protótipo acadêmico em React Native com Expo SDK 53 e banco de dados SQLite local. Versão 1.4.0 com identidade visual azul galáctica, logo original de carro e cancela e layout adaptado para celular e computador.
+Protótipo acadêmico em React Native com Expo SDK 58 e banco de dados SQLite local. Versão 1.5.0 com identidade visual azul galáctica, logo original de carro e cancela e layout adaptado para celular e computador.
 
 ## Integração de vagas e veículos
 - Clique em qualquer vaga no mapa inicial ou na tela Vagas para abrir seus detalhes.
@@ -29,10 +29,10 @@ Protótipo acadêmico em React Native com Expo SDK 53 e banco de dados SQLite lo
 
 ## Como executar
 1. Clone este repositório ou baixe o ZIP e abra a pasta que contém `package.json`.
-2. Instale Node.js LTS, se ainda não tiver.
+2. Instale Node.js 24 LTS (24.3 ou superior).
 3. No terminal, execute `npm install`.
 4. Em seguida, execute `npx expo start`.
-5. Escaneie o QR Code com o Expo Go compatível ou use um emulador Android.
+5. Escaneie o QR Code com o Expo Go compatível com SDK 58 ou use um emulador Android.
 
 Para testar no navegador, execute `npm run web`. O projeto inclui a configuração de WebAssembly e dos cabeçalhos COOP/COEP exigidos pelo SQLite web em `metro.config.js`. Em uma hospedagem web, esses cabeçalhos também precisam ser configurados no servidor. Não há site público publicado nesta entrega.
 

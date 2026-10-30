@@ -46,3 +46,14 @@ Os testes de migração usam o código real de database.js com SQLite em memóri
 - Saída do veículo de teste liberou A03. A ocupação preexistente A02 foi preservada.
 - Testes automatizados com SQLite em memória: planos inválidos, prorrogações sucessivas, bloqueio após saída, cálculo por período e renovação após vencimento, além das verificações anteriores.
 - A validação desta versão foi feita no navegador; Android/iOS não foram executados.
+
+
+# Verificação da versão 1.5.0 — 30/10/2026
+
+- Migração para Expo 58.0.21, React Native 0.88.1, React 19.3.0 e expo-sqlite 58.0.14.
+- Expo Doctor: 20/20 verificações aprovadas.
+- Testes de regras e migração SQLite: aprovados.
+- Exportação de bundles Android, iOS e web concluída. Isso não substitui teste em aparelho físico.
+- Interface web: cadastro de veículo persistido, entrada, prorrogação para 120 minutos/R$ 40, recarga preservando os valores e saída liberando a vaga.
+- Teste realizado em armazenamento local isolado; nenhum banco de teste é incluído na entrega.
+- Android/iOS físicos ainda precisam de validação pelo grupo usando Expo Go para SDK 58.
