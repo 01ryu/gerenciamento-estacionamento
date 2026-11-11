@@ -1,6 +1,6 @@
 # Órbita — Gerenciamento de Estacionamento
 
-Protótipo acadêmico em React Native com Expo SDK 58 e banco de dados SQLite local. Versão 1.5.0 com identidade visual azul galáctica, logo original de carro e cancela e layout adaptado para celular e computador.
+Protótipo acadêmico em React Native com Expo SDK 58 e banco de dados SQLite local.
 
 ## Integração de vagas e veículos
 - Clique em qualquer vaga no mapa inicial ou na tela Vagas para abrir seus detalhes.
