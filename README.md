@@ -74,9 +74,8 @@ Ocupações antigas sem placa são exibidas como “Veículo não informado” e
 ## Testes
 Execute `node tests.cjs` com Node.js 22.13 ou superior para verificar validação, vínculos, transações e migração em um SQLite isolado em memória. A verificação manual de interface está em [TESTES_UI.md](TESTES_UI.md).
 
-## Documentação da primeira entrega
-- [Proposta inicial](PROPOSTA.md).
-- [Relatório acadêmico em PDF](Projeto_Estacionamento.pdf).
-- [Verificação do exemplo do professor](VERIFICACAO.md).
+## Documentação acadêmica
 
-Esses documentos registram a etapa anterior ao protótipo SQLite. As capturas e os testes neles apresentados são do Portal Acadêmico do professor, não deste aplicativo. A atualização visual parte da versão 1.1.0 enviada pelo grupo. Os testes desta versão estão em [TESTES_UI.md](TESTES_UI.md). A execução nativa em Android/iOS ainda precisa ser validada.
+- [Proposta do Órbita](PROPOSTA.md) com objetivo, público-alvo, arquitetura e fluxo de uso.
+- [Relatório do projeto](Projeto_Estacionamento.pdf) com as telas do estacionamento e as capturas da Release 5.1 do professor.
+- [Verificação do Portal Acadêmico](VERIFICACAO.md) e [testes do Órbita](TESTES_UI.md).
